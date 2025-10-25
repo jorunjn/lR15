@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Корзина — LOFI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #ffffff; color: #111; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    .container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .header-left { display: flex; align-items: center; gap: 20px; }
+    .header-left img { width: 50px; height: 50px; object-fit: contain; }
+    .nav-links { display: flex; gap: 18px; font-size: 14px; }
+    .nav-links a { padding: 6px 10px; border-radius: 10px; }
+    .nav-links a.active { background: #111; color: #fff; }
+    .header-right { text-align: right; font-size: 14px; }
+
+    .breadcrumbs { font-size: 14px; color: #444; margin: 10px 0 20px; }
+    .breadcrumbs span { color: #ff9900; }
+
+    .cart-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; }
+
+    .panel { border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; }
+    .panel h2 { font-size: 20px; margin-bottom: 12px; }
+
+    .cart-items { display: grid; gap: 12px; }
+
+    .item { display: grid; grid-template-columns: 96px 1.6fr 0.8fr 150px 100px 24px; gap: 12px; align-items: center; padding: 12px; border: 1px solid #ececec; border-radius: 12px; }
+    .item .photo { width: 96px; height: 72px; border-radius: 10px; overflow: hidden; background: #f5f5f5; display: grid; place-items: center; }
+    .item .title { font-size: 15px; font-weight: 600; }
+    .item .meta { color: #666; font-size: 12px; margin-top: 4px; }
+    .item .price { font-weight: 700; }
+
+    .qty { display: inline-flex; align-items: center; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; }
+    .qty button { width: 36px; height: 36px; border: 0; background: #f3f4f6; cursor: pointer; font-size: 18px; }
+    .qty input { width: 48px; height: 36px; text-align: center; border: 0; outline: none; background: #fff; font-weight: 600; }
+
+    .remove { width: 24px; height: 24px; display: grid; place-items: center; border: 0; background: transparent; cursor: pointer; border-radius: 6px; }
+    .remove:hover { background: #f3f4f6; }
+
+    .empty { padding: 24px; text-align: center; color: #666; }
+
+    .summary { position: sticky; top: 16px; }
+    .summary .line { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #e5e7eb; }
+    .summary .line:last-child { border-bottom: 0; }
+    .summary .total { font-size: 20px; font-weight: 800; }
+
+    .promo { display: flex; gap: 8px; margin-top: 12px; }
+    .promo input { flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid #ddd; }
+    .btn { display: inline-flex; justify-content: center; align-items: center; padding: 10px 14px; border-radius: 10px; border: 0; cursor: pointer; background: #111; color: #fff; font-weight: 600; }
+    .btn.light { background: #f3f4f6; color: #111; }
+    .btn.full { width: 100%; }
+
+    .delivery { margin-top: 12px; display: grid; gap: 10px; }
+    .delivery label { display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 12px; cursor: pointer; }
+    .delivery small { color: #666; }
+
+    .disclaimer { margin-top: 10px; font-size: 12px; color: #667085; }
+
+    .help { margin-top: 14px; font-size: 14px; color: #444; display: grid; gap: 4px; }
+
+    @media (max-width: 1024px) {
+      .cart-layout { grid-template-columns: 1fr; }
+      .item { grid-template-columns: 80px 1.4fr 0.8fr 140px 90px 24px; }
+      .summary { position: static; }
+    }
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      .item { grid-template-columns: 72px 1fr; grid-template-areas: 
+          'photo title' 
+          'photo meta' 
+          'price price' 
+          'qty subtotal' 
+          'remove remove'; }
+      .item .photo { grid-area: photo; }
+      .item .title { grid-area: title; }
+      .item .meta { grid-area: meta; }
+      .item .price { grid-area: price; }
+      .item .qty { grid-area: qty; }
+      .item .subtotal { grid-area: subtotal; text-align: right; font-weight: 700; }
+      .item .remove { grid-area: remove; justify-self: end; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-left">
+        <a href=index.html aria-label="LOFI на главную"><img src="лого.png" alt="LOFI" /></a>
+        <nav class="nav-links">
+          <a href="About_Page.html">О КОМПАНИИ</a>
+          <a class="active" href=Cart_Page.html>КОРЗИНА</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <div>8-975-455-79-32</div>
+        <div>ул. Красноармейская, 21</div>
+        <div>9:00–20:00 без выходных и перерывов</div>
+      </div>
+    </header>
+
+    <div class="breadcrumbs">Главная >> <span>Корзина</span></div>
+
+    <div class="cart-layout">
+      <section class="panel">
+        <h2>Товары в корзине</h2>
+        <div id="items" class="cart-items" role="list"></div>
+        <div id="empty" class="empty" hidden>Ваша корзина пуста. Перейдите в каталог и добавьте товары.</div>
+        <div style="display:flex; gap:8px; margin-top: 12px; flex-wrap: wrap;">
+          <a class="btn light" href=tables.html>← Вернуться в каталог</a>
+          <button class="btn light" id="clearCart" type="button">Очистить корзину</button>
+        </div>
+      </section>
+
+      <aside class="panel summary" aria-live="polite">
+        <h2>Итого</h2>
+        <div class="line"><span>Товары</span><strong id="sumItems">0 BYN</strong></div>
+        <div class="line"><span>Скидка</span><strong id="discount">0 BYN</strong></div>
+        <div class="line"><span>Доставка</span><strong id="deliveryCost">0 BYN</strong></div>
+        <div class="line total"><span>К оплате</span><strong id="grand">0 BYN</strong></div>
+
+        <div class="promo">
+          <input id="promo" placeholder="Промокод (например, LOFI10)" />
+          <button class="btn" id="applyPromo" type="button">Применить</button>
+        </div>
+
+        <div class="delivery" id="delivery">
+          <label>
+            <span>
+              <input type="radio" name="del" value="0" checked /> Самовывоз
+              <br /><small>г. Минск, ул. Красноармейская, 21</small>
+            </span>
+            <strong>0 BYN</strong>
+          </label>
+          <label>
+            <span>
+              <input type="radio" name="del" value="15" /> Курьер по городу
+              <br /><small>1–2 дня</small>
+            </span>
+            <strong>15 BYN</strong>
+          </label>
+          <label>
+            <span>
+              <input type="radio" name="del" value="20" /> Транспортная компания
+              <br /><small>По Беларуси, 2–5 дней</small>
+            </span>
+            <strong>20 BYN</strong>
+          </label>
+        </div>
+
+        <button class="btn full" id="checkout" type="button" style="margin-top:12px;">Оформить заказ</button>
+        <p class="disclaimer">Нажимая «Оформить заказ», вы соглашаетесь с условиями покупки и обработкой персональных данных.</p>
+
+        <div class="help">
+          <div><strong>Нужна помощь?</strong> Звоните: 8-975-455-79-32</div>
+          <div>Пишете референс — мы подберём подходящий стол/материалы.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const LS_KEY = 'lofi_cart';
+
+
+    const money = (n) => `${n.toFixed(2).replace(/\.00$/, '')} BYN`;
+
+    function readCart() {
+      try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
+    }
+    function writeCart(items) { localStorage.setItem(LS_KEY, JSON.stringify(items)); }
+
+    function seedIfEmpty() {
+      const now = readCart();
+      if (now.length === 0) {
+        writeCart([
+          { id: 'milovisa-1', title: 'Стол Milovisa', price: 2000, img: 'стол_1.png', qty: 1, color: 'Дуб', size: '120×60' },
+          { id: 'milovisa-2', title: 'Стол Milovisa', price: 2450, img: 'стол_3.png', qty: 1, color: 'Орех', size: '140×70' }
+        ]);
+      }
+    }
+
+    function render() {
+      const itemsEl = document.getElementById('items');
+      const emptyEl = document.getElementById('empty');
+      const items = readCart();
+
+      itemsEl.innerHTML = '';
+      if (items.length === 0) {
+        emptyEl.hidden = false;
+      } else {
+        emptyEl.hidden = true;
+      }
+
+      let sum = 0;
+
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'item';
+        row.setAttribute('role', 'listitem');
+        row.dataset.id = item.id;
+        row.innerHTML = `
+          <div class="photo"><img alt="${item.title}" src="${item.img || 'placeholder.png'}"></div>
+          <div>
+            <div class="title">${item.title}</div>
+            <div class="meta">Цвет: ${item.color || '—'} · Размер: ${item.size || '—'}</div>
+          </div>
+          <div class="price">${money(item.price)}</div>
+          <div class="qty">
+            <button class="minus" aria-label="Уменьшить">−</button>
+            <input class="q" inputmode="numeric" pattern="\\d*" value="${item.qty}" />
+            <button class="plus" aria-label="Увеличить">+</button>
+          </div>
+          <div class="subtotal">${money(item.price * item.qty)}</div>
+          <button class="remove" title="Удалить" aria-label="Удалить">✕</button>
+        `;
+        itemsEl.appendChild(row);
+        sum += item.price * item.qty;
+      });
+
+      document.getElementById('sumItems').textContent = money(sum);
+      updateTotals();
+    }
+
+    function updateTotals() {
+      const items = readCart();
+      const delivery = Number(document.querySelector('input[name="del"]:checked')?.value || 0);
+      const sum = items.reduce((s, it) => s + it.price * it.qty, 0);
+      const discountVal = currentDiscount(sum);
+      const grand = Math.max(0, sum - discountVal) + delivery;
+
+      document.getElementById('discount').textContent = money(discountVal);
+      document.getElementById('deliveryCost').textContent = money(delivery);
+      document.getElementById('grand').textContent = money(grand);
+    }
+
+    function currentDiscount(sum) {
+      const code = (window.__PROMO || '').trim().toUpperCase();
+      if (code === 'LOFI10') return +(sum * 0.10).toFixed(2);
+      return 0;
+    }
+
+    document.getElementById('applyPromo').addEventListener('click', () => {
+      const val = document.getElementById('promo').value;
+      window.__PROMO = val;
+      updateTotals();
+      if ((val || '').trim().toUpperCase() === 'LOFI10') {
+        alert('Промокод применён: скидка 10%');
+      } else if (val.trim() !== '') {
+        alert('Неизвестный промокод');
+      }
+    });
+
+    document.getElementById('delivery').addEventListener('change', updateTotals);
+
+    document.getElementById('clearCart').addEventListener('click', () => {
+      if (confirm('Очистить корзину?')) {
+        writeCart([]);
+        render();
+      }
+    });
+
+    document.getElementById('items').addEventListener('click', (e) => {
+      const row = e.target.closest('.item');
+      if (!row) return;
+      const id = row.dataset.id;
+      const items = readCart();
+      const it = items.find(x => x.id === id);
+      if (!it) return;
+
+      if (e.target.classList.contains('minus')) {
+        it.qty = Math.max(1, (it.qty || 1) - 1);
+        writeCart(items);
+        render();
+      }
+      if (e.target.classList.contains('plus')) {
+        it.qty = (it.qty || 1) + 1;
+        writeCart(items);
+        render();
+      }
+      if (e.target.classList.contains('remove')) {
+        if (confirm('Удалить товар из корзины?')) {
+          writeCart(items.filter(x => x.id !== id));
+          render();
+        }
+      }
+    });
+
+    document.getElementById('items').addEventListener('input', (e) => {
+      if (!e.target.classList.contains('q')) return;
+      const row = e.target.closest('.item');
+      const id = row?.dataset.id;
+      const items = readCart();
+      const it = items.find(x => x.id === id);
+      if (!it) return;
+      const v = Math.max(1, parseInt(e.target.value.replace(/\D/g, ''), 10) || 1);
+      it.qty = v;
+      writeCart(items);
+      render();
+    });
+
+    document.getElementById('checkout').addEventListener('click', () => {
+      const items = readCart();
+      if (items.length === 0) return alert('Корзина пуста');
+      const delivery = Number(document.querySelector('input[name="del"]:checked')?.value || 0);
+      const sum = items.reduce((s, it) => s + it.price * it.qty, 0);
+      const discountVal = currentDiscount(sum);
+      const grand = Math.max(0, sum - discountVal) + delivery;
+      alert('Заказ оформлен!\n\nТоваров: ' + money(sum) + '\nСкидка: ' + money(discountVal) + '\nДоставка: ' + money(delivery) + '\nИтого к оплате: ' + money(grand));
+    });
+
+    seedIfEmpty();
+    render();
+  </script>
+</body>
+</html>

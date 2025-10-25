@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Рабочие столы — LOFI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; background: #fff; color: #111; }
+    .container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .header-left { display: flex; align-items: center; gap: 20px; }
+    .header-left img { width: 50px; }
+    .header-left .nav-links { display: flex; flex-direction: row; gap: 20px; font-size: 14px; }
+    .header-left .nav-links a { color: inherit; text-decoration: none; padding: 6px 10px; border-radius: 10px; }
+    .header-left .nav-links a:hover { background: #f3f3f3; }
+    .header-right { text-align: right; font-size: 14px; }
+    .nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .breadcrumbs { font-size: 14px; }
+    .breadcrumbs span { color: #ff9900; }
+    .search { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 0 auto; }
+    .search input { padding: 8px 12px; border-radius: 20px; border: 1px solid #ccc; width: 480px; }
+    .categories { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; justify-content: center; }
+    .categories button { padding: 6px 14px; border: none; border-radius: 20px; background: #eee; cursor: pointer; }
+    .price-filter { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    #price-value { font-weight: bold; }
+    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .card { border: 1px solid #ccc; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; align-items: center; height: 100%; }
+    .card img { width: 100%; height: auto; border-radius: 8px; }
+    .card h3 { font-size: 14px; margin: 8px 0 4px; }
+    .card p.price { font-weight: bold; margin-bottom: 4px; font-size: 14px; }
+    .status { display: inline-block; font-size: 12px; padding: 2px 6px; border-radius: 8px; background: #e6ffe6; color: #008000; margin-bottom: 6px; }
+    .card .actions { display: flex; flex-direction: column; gap: 4px; margin-top: auto; width: 100%; }
+    .card button { padding: 6px; border: none; background: black; color: white; cursor: pointer; border-radius: 6px; font-size: 13px; }
+    .card .quick-buy { font-size: 11px; color: #333; text-decoration: underline; background: none; border: none; cursor: pointer; }
+    .pagination { text-align: center; margin: 30px 0; }
+    .pagination button { border: none; padding: 6px 10px; margin: 0 2px; border-radius: 6px; cursor: pointer; }
+
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: #111; color: #fff; padding: 10px 14px; border-radius: 10px; opacity: 0; pointer-events: none; transition: opacity .25s ease; font-size: 14px; }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-left">
+        <a href=index.html aria-label="LOFI на главную"><img src="лого.png" alt="LOFI" /></a>
+        <nav class="nav-links">
+          <a href="D:\КИБИП\мобилки\lab11-13\About_Page.html">О КОМПАНИИ</a>
+          <a class="active" href=Cart_Page.html>КОРЗИНА</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <div>8-975-455-79-32</div>
+        <div>ул. Красноармейская, 21</div>
+        <div>9:00–20:00 без выходных и перерывов</div>
+      </div>
+    </header>
+
+    <div class="nav">
+      <div class="breadcrumbs">Главная >> Столы >> <span>Рабочие столы</span></div>
+    </div>
+    <div class="search">
+      <img src="цветок.png" alt="цветок" width="30">
+      <input type="text" placeholder="Поиск">
+      <img src="цветок.png" alt="цветок" width="30">
+    </div>
+
+    <div class="price-filter">
+      <label for="range">Цена:</label>
+      <input type="range" id="range" min="1" max="10000" value="1" oninput="document.getElementById('price-value').textContent = this.value + ' BYN'">
+      <span id="price-value">1 BYN</span>
+    </div>
+
+    <div class="categories">
+      <button>Столы</button><button>Стулья</button><button>Диваны</button><button>Кровать</button>
+      <button>Матрасы</button><button>Светильники</button><button>Кресла</button><button>Кухни</button>
+      <button>Шкафы</button><button>Зеркала</button><button>Тумбы</button><button>Вешалки</button>
+    </div>
+
+    <div class="cards">
+      <div class="card" data-id="milovisa-1" data-title="Стол Milovisa" data-price="2000" data-img="стол_1.png">
+        <img src="стол_1.png" alt="Стол 1">
+        <div class="status">в наличии</div>
+        <h3>Стол Milovisa</h3>
+        <p class="price">2000 BYN</p>
+        <div class="actions">
+          <button class="add-to-cart">Добавить в корзину</button>
+          <button class="quick-buy">Купить в один клик</button>
+        </div>
+      </div>
+      <div class="card" data-id="milovisa-2" data-title="Стол Milovisa" data-price="2450" data-img="стол_3.png">
+        <img src="стол_3.png" alt="Стол 2">
+        <div class="status">в наличии</div>
+        <h3>Стол Milovisa</h3>
+        <p class="price">2450 BYN</p>
+        <div class="actions">
+          <button class="add-to-cart">Добавить в корзину</button>
+          <button class="quick-buy">Купить в один клик</button>
+        </div>
+      </div>
+      <div class="card" data-id="milovisa-3" data-title="Стол Milovisa" data-price="2700" data-img="стол_2.png">
+        <img src="стол_2.png" alt="Стол 3">
+        <div class="status">в наличии</div>
+        <h3>Стол Milovisa</h3>
+        <p class="price">2700 BYN</p>
+        <div class="actions">
+          <button class="add-to-cart">Добавить в корзину</button>
+          <button class="quick-buy">Купить в один клик</button>
+        </div>
+      </div>
+      <div class="card" data-id="milovisa-4" data-title="Стол Milovisa" data-price="2000" data-img="стол_4.png">
+        <img src="стол_4.png" alt="Стол Milovisa">
+        <div class="status">в наличии</div>
+        <h3>Стол Milovisa</h3>
+        <p class="price">2000 BYN</p>
+        <div class="actions">
+          <button class="add-to-cart">Добавить в корзину</button>
+          <button class="quick-buy">Купить в один клик</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button>&lt;</button>
+      <button>&lt;&lt;</button>
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>4</button>
+      <button>...</button>
+      <button>&gt;&gt;</button>
+      <button>&gt;</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">Товар добавлен в корзину</div>
+
+  <script>
+    const LS_KEY = 'lofi_cart';
+
+    function readCart(){ try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; } }
+    function writeCart(items){ localStorage.setItem(LS_KEY, JSON.stringify(items)); }
+
+    function addToCart(product){
+      const cart = readCart();
+      const found = cart.find(x => x.id === product.id);
+      if (found) { found.qty = (found.qty || 1) + (product.qty || 1); }
+      else { cart.push({ id: product.id, title: product.title, price: Number(product.price)||0, img: product.img||'', qty: product.qty||1 }); }
+      writeCart(cart);
+    }
+
+    function showToast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(()=> t.classList.remove('show'), 1600);
+    }
+
+    document.querySelectorAll('.card').forEach(card => {
+      const id = card.dataset.id;
+      const title = card.dataset.title || card.querySelector('h3')?.textContent?.trim() || 'Товар';
+      const price = Number(card.dataset.price || (card.querySelector('.price')?.textContent || '').replace(/[^\d.]/g,''));
+      const img = card.dataset.img || card.querySelector('img')?.getAttribute('src') || '';
+
+      card.querySelector('.add-to-cart')?.addEventListener('click', () => {
+        addToCart({ id, title, price, img, qty: 1 });
+        showToast('Добавлено в корзину');
+      });
+
+      card.querySelector('.quick-buy')?.addEventListener('click', () => {
+        addToCart({ id, title, price, img, qty: 1 });
+        window.location.href = "Cart_Page.html";
+      });
+    });
+  </script>
+</body>
+</html>

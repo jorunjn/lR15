@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Авторизация — LOFI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: sans-serif;
+      background: #f8f8f8;
+      color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .auth-container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      width: 440px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      position: relative;
+    }
+    .auth-container .logo {
+      width: 263px;
+      height: 158px;
+      margin-bottom: -10px;
+      margin-left: -40px;
+    }
+    .auth-container h1 {
+      font-size: 24px;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    .auth-container input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    .auth-container .restore {
+      font-size: 12px;
+      align-self: flex-start;
+    }
+    .auth-container .restore span {
+      color: #000;
+    }
+    .auth-container .restore a {
+      color: #4db8ff;
+      text-decoration: none;
+      margin-left: 4px;
+    }
+    .auth-container button {
+      width: 100%;
+      background: #6c63ff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .auth-container .bottom-link {
+      font-size: 14px;
+    }
+    .auth-container .bottom-link a {
+      color: #4d4dff;
+      text-decoration: none;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <img class="logo" src="логотип.png" alt="Логотип">
+    <h1>Авторизируйтесь</h1>
+    <input type="email" id="auth-email" placeholder="Введите вашу почту...">
+    <input type="password" id="auth-password" placeholder="Пароль">
+    <div class="restore">
+      <span>забыли пароль?</span>
+      <a href=register.html>восстановить</a>
+    </div>
+    <button onclick="loginUser()">Войти</button>
+    <div class="bottom-link">
+      Нет Аккаунта? <a href=register.html>Зарегистрироваться</a>
+    </div>
+  </div>
+
+  <script>
+    function loginUser() {
+      const email = document.getElementById('auth-email').value;
+      const password = document.getElementById('auth-password').value;
+      const user = JSON.parse(localStorage.getItem("lofi_user"));
+
+      if (!user || user.email !== email || user.password !== password) {
+        alert("Неверный email или пароль. Попробуйте снова.");
+        return;
+      }
+
+      alert("Успешный вход. Добро пожаловать, " + user.name + "!");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

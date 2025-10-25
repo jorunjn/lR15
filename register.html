@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация — LOFI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: sans-serif;
+      background: #f8f8f8;
+      color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .register-container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      width: 460px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .register-container .logo {
+      width: 263px;
+      height: 158px;
+      margin-bottom: -10px;
+      margin-left: -40px;
+    }
+    .register-container h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .register-container input[type="text"],
+    .register-container input[type="email"],
+    .register-container input[type="tel"],
+    .register-container input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    .register-container label {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .register-container label a {
+      color: #4db8ff;
+      text-decoration: none;
+    }
+    .register-container button {
+      width: 100%;
+      background: #6c63ff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .register-container .bottom-link {
+      font-size: 14px;
+    }
+    .register-container .bottom-link a {
+      color: #4d4dff;
+      text-decoration: none;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <img class="logo" src="логотип.png" alt="Логотип">
+    <h1>Создайте Аккаунт</h1>
+    <input type="text" id="name" placeholder="Имя">
+    <input type="email" id="email" placeholder="Почта">
+    <input type="tel" id="phone" placeholder="Номер телефона">
+    <input type="password" id="password" placeholder="Пароль">
+    <label>
+      <input type="checkbox" id="agreement">
+      <span>Вы согласны с условиями политики <a href="#">конфиденциальности</a></span>
+    </label>
+    <button onclick="registerUser()">Зарегистрироваться</button>
+    <div class="bottom-link">
+      Есть аккаунт? <a href=auth.html>Войдите</a>
+    </div>
+  </div>
+
+  <script>
+    function registerUser() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const password = document.getElementById('password').value;
+      const agreement = document.getElementById('agreement').checked;
+
+      if (!name || !email || !phone || !password || !agreement) {
+        alert("Пожалуйста, заполните все поля и подтвердите согласие.");
+        return;
+      }
+
+      const userData = {
+        name,
+        email,
+        phone,
+        password
+      };
+
+      localStorage.setItem("lofi_user", JSON.stringify(userData));
+      alert("Регистрация прошла успешно! Теперь вы можете войти.");
+      window.location.href ="auth.html";
+    }
+  </script>
+</body>
+</html>
